@@ -1,0 +1,210 @@
+[
+    {
+        // MAIN BAR //
+        "layer": "top",
+        "position": "top",
+        "name": "main",
+        "height": 28,
+        "reload_style_on_change": true,
+        "margin-top": 6,
+        "margin-left": 6,
+        "margin-right": 6,
+
+        "modules-left": [
+            "custom/distro",
+            "hyprland/workspaces",
+	    "cpu",
+	    "custom/gpu-usage",
+	    "memory#ram",
+        ],
+
+	 "modules-center": [
+	    "clock",
+        ],
+
+        "modules-right": [
+	    "group/traym",
+	    "pulseaudio#input",
+	    "pulseaudio#output",
+	    "network#info",
+            //"custom/weather",
+	    //"clock",
+	    "custom/powerbutton",
+        ],
+
+        // Modules
+              "custom/weather": {
+            "format": "{}°",
+            "tooltip": true,
+            "interval": 60,
+            "exec": "wttrbar --nerd --location Paris",
+            "return-type": "json",
+        },
+
+        "group/traym": {
+            "orientation": "horizontal",
+            "drawer": {},
+            "modules": ["custom/trayicon", "tray"],
+        },
+
+        "clock": {
+            "interval": 1,
+            "format": "{:%H:%M %p -  %a %d}",
+            "tooltip-format": "{calendar}",
+            "calendar": {
+                "weeks-pos": "right",
+                "mode": "month",
+                "format": {
+                    "months": "<span color='#b4befe'><b>{}</b></span>",
+                    "days": "<span color='#b4befe'><b>{}</b></span>",
+                    "weeks": "<span color='#b4befe'> W{}</span>",
+                    "weekdays": "<span color='#b4befe'><b>{}</b></span>",
+                    "today": "<span color='#b4befe'><b><u>{}</u></b></span>",
+                },
+            },
+        },
+
+        "cpu": {
+            "interval": 4,
+            "format": " {usage}%",
+	    "on-click": "kitty -e btop",
+            "states": {
+                "warning": 80,
+                "critical": 95,
+            },
+        },
+
+          "memory#ram": {
+            "interval": 4,
+            "format": " {percentage}%",
+	    "on-click": "kitty -e btop",
+            "states": {
+                "warning": 80,
+                "critical": 95,
+            },
+            "tooltip": "{}",
+            "tooltip-format": "{used}/{total} GiB",
+        },
+
+	 "custom/gpu-usage": {
+	  "format": "{} {icon}", /* "{text} {icon}" for nightly users */
+	  "exec": "gpu-usage-waybar",
+	  "return-type": "json",
+	  "format-icons": "",
+	  "on-click": "kitty -e btop",
+
+	  "custom/trayicon": {
+            "format": "󰣇 ",
+            "tooltip": false,
+            "on-click": " bash ~/.config/scripts/pacman.sh",
+            "on-scroll-up": "",
+            "on-scroll-down": "",
+        },
+        },
+        "network#info": {
+            "interval": 2,
+            "format": "󱘖  Offline",
+            "format-wifi": "{icon}  |",
+            "format-ethernet": "󰈀 {bandwidthDownBits}",
+            "tooltip": "{}",
+            "tooltip-format-wifi": "{ifname}\n{essid}\n{signalStrength}% \n{frequency} GHz\n󰇚 {bandwidthDownBits}\n󰕒 {bandwidthUpBits}",
+            "tooltip-format-ethernet": "{ifname}\n󰇚 {bandwidthDownBits} \n󰕒 {bandwidthUpBits}",
+            "on-click": "kitty -e nmtui",
+            "format-icons": ["󰤫", "󰤟", "󰤢", "󰤥", "󰤨"],
+            "states": {
+                "normal": 25,
+            },
+        },
+       
+	"hyprland/workspaces": {
+            "disable-scroll-wraparound": true,
+            "smooth-scrolling-threshold": 4,
+            "enable-bar-scroll": true,
+            "format": "",
+            "show-special": true,
+            "special-visible-only": false,
+	    "all-outputs": true,
+            "format-icons": {
+                "magic": "",
+                "zellij": "",
+                "10": "󰊴",
+                "lock": "",
+            },
+        },
+
+        "pulseaudio#output": {
+            "format": "{icon} {volume}%",
+            "format-bluetooth": "{icon} {volume}%",
+            "format-source-muted": "{volume}",
+            "format-icons": {
+                "headphone": "",
+                "hands-free": "",
+                "headset": "",
+                "phone": "",
+                "portable": "",
+                "car": "",
+                "default": ["", ""],
+            },
+            "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+            "on-click-right": "pavucontrol",
+            "on-scroll-up": "sh -c 'vol=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP \"\\d+(?=%)\" | head -1); if [ \"$vol\" -lt 100 ]; then pactl set-sink-volume @DEFAULT_SINK@ +2%; else pactl set-sink-volume @DEFAULT_SINK@ 110%; fi'",
+            "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%",
+            "tooltip": true,
+            "scroll-step": 4,
+        },
+
+        "pulseaudio#input": {
+            "format": " {format_source}%",
+            "format-source": "{volume}",
+            "format-source-muted": "{volume}",
+            "on-scroll-up": "sh -c 'vol=$(pactl get-source-volume @DEFAULT_SOURCE@ | grep -oP \"\\d+(?=%)\" | head -1); if [ \"$vol\" -lt 100 ]; then pactl set-source-volume @DEFAULT_SOURCE@ +2%; else pactl set-source-volume @DEFAULT_SOURCE@ 110%; fi'",
+            "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -2%",
+            "max-volume": "100",
+            "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+            "on-click-right": "pavucontrol",
+            "tooltip-format": "{source_desc}",
+            "scroll-step": 4,
+        },
+
+        "tray": {
+            "icon-size": 18,
+            "spacing": 8,
+        },
+
+        "custom/trayicon": {
+            "format": "󰣇 ",
+            "tooltip": false,
+            "on-click": " bash ~/.config/scripts/pacman.sh",
+            "on-scroll-up": "",
+            "on-scroll-down": "",
+        },
+
+	"custom/distro": {
+	    "format": "󰣇",
+            "tooltip": false,
+            "on-click": "~/.config/rofi/scripts/large/launcher.sh",
+            "on-scroll-up": "",
+            "on-scroll-down": "",
+        },
+	"custom/powerbutton": {
+	    "format": "⏻",
+            "tooltip": false,
+            "on-click": "wlogout",
+            "on-scroll-up": "",
+            "on-scroll-down": "",
+        },
+    },
+    {
+        // INDICATOR BAR //
+        "layer": "top",
+        "position": "top",
+        "name": "indicator",
+        "passthrough": true,
+        "reload_style_on_change": true,
+
+        "height": 30,
+
+        "margin-top": -29,
+        "margin-right": 24,
+    },
+]
